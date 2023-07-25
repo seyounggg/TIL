@@ -51,6 +51,33 @@
       # XML : 파일이 한개 (공통부분에서 많이 사용)
       # Annotation : 클래스 마다 (개발자별로)
 
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sist.dao.emp-mapper">
+  <select id="empListData" resultType="EmpVO" parameterType="">
+                                              ----------------한개만 가능
+                          ------------------ 결과값을 받을 데이터 타입을 작성해주면 됨
+    SELECT empno,ename,job,hiredate,sal
+    FROM emp
+  </select>
+</mapper>
+
+? SqlSessionDaoSuport 란?
+
+/* xml 사용 시 코드
+	<select id="empListData" resultType="EmpVO" parameterType="int">
+	  SELECT ~~~
+	</select>
+	
+	id => 메소드명
+	resultType => return형
+	parameterType => 매개변수
+	
+	public List<EmpVO> empListData(int no){}
+ */
+
 3. AOP : 공통모듈을 모아서 적용(중복제거)
 4. MVC : 웹 관련(데이터 관리 + 화면 출력)
 5. Front + Back ==> RestFul
