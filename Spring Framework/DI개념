@@ -1,0 +1,58 @@
+📍 Spring Framework
+1. Container : 사용자가 등록한 클래스를 관리(POJO : 일반 클래스, 인터페이스, 상속이 없는 상태의 클래스)
+2. DI(Dipendency Injection) : 프로그램 동작을 위한 필요데이터를 스프링을 통해서 전송
+  - 결합성을 낮게 만든다
+    (유지보수에 최적화된 프레임워크)
+  - 클래스와 클래스간의 의존관계 설정 및 주입
+  - 변수의 초기화,필요한 메소드 호출
+  2-1. XML로 등록(메뉴얼)
+    -  XML,Annotation => Container => 프로그램 동작이 가능
+    동작)
+      XML을 제공 => Container
+            1. BeanFactory : core(DI)
+            2. ApplicationContext(XML) : core + AOP
+              => 순수하게 자바로만 코딩 .class 파일
+                AnnotationConfigApplicationContext
+            3. WebApplicationContext : core + AOP + MVC
+      - bean 생성(클래스 메모리 할당)
+        <bean id="a" class="A"> => Class.forName("A") => 찾는 조건 id
+           ------- 중복할 수 없다
+      - 의존성 주입
+        class가 동작하기 위한 멤버변수의 초기화
+                  ----- : 일반변수,클래스객체(주소)
+        형식)
+        <bean id="" class=""
+          p:name=""
+          p:age=""
+          ------------- 일반변수값 설정
+          p:dao-ref=""
+          ------------- 생성된 객체의 주소값 설정
+        />
+        = init-method : 생성과 동시에 자동으로 메소드 호출
+          => 크롤링, 트위터 읽기, 자동로그인, 드라이버 등록..
+        = 개발자가 등록된 클래스 객체를 활용(스프링에서 처리하는 부분 아님)
+        = destroy-method : 객체 소멸시 호출
+                  db.close() ...
+        = 소멸
+        ** 일반멤버변수는 데이터베이스 정보외에는 거의 사용빈도가 없다
+    - 클래스에 설정된 변수에 대한 값을 주입
+      1. 명시적 초기화 (X)
+      2. 생성자 : 매개변수에 값을 지정
+        <constructor>
+      3. setter : setXxx()에 값을 지정
+        <property>
+    - 클래스가 많다면 XML이 커진다(속도가 늦어진다)
+      : 패키지 단위로 등록
+      스프링에 등록 / 등록이 안되는 클래스
+      ---------------------------- 구분(어노테이션)
+    - 클래스 종류
+      1. 사용자 정의 클래스 (패키지 단위 등록)
+      2. 라이브러리 클래스 (<Bean>)
+      # XML : 파일이 한개 (공통부분에서 많이 사용)
+      # Annotation : 클래스 마다 (개발자별로)
+
+3. AOP : 공통모듈을 모아서 적용(중복제거)
+4. MVC : 웹 관련(데이터 관리 + 화면 출력)
+5. Front + Back ==> RestFul
+6. 보안 : 암호화, 권한, 복호화
+기타. 데이터베이스 연결(ORM) => MyBatis,트렌젝션
