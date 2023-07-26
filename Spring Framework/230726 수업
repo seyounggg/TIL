@@ -83,5 +83,100 @@ Spring Framework
       - Java code
       ✓ xml,Annotation,JavaCode => 메타정보 => 스프링 컨테이너
 
-      📍 Bean(객체) 생성주기
-          Bean 생성 → DI → init-method → 객체사용(개발자) → destroy-method → 소멸
+    📍 Bean(객체) 생성주기
+        Bean 생성 → DI → init-method → 객체사용(개발자) → destroy-method → 소멸
+  ---------------------------------------------------------------------------
+    📍 Config.xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE configuration
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <configuration> → Connection 생성하는 곳
+      <!-- configuration 태그 안에 사용 가능한 태그 및 태그 순서(순서 중요해!)
+        properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?,
+        reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?
+      -->
+      <!-- VO 등록 -->
+      <typeAliases>
+        <typeAlias type="com.sist.dao.StudentVO" alias="StudentVO"/>
+      </typeAliases>
+      <!-- SQL 등록 -->
+      <mappers>
+        <mapper resource="com/sist/dao/student-mapper.xml"/>
+      </mappers>
+    </configuration>
+
+    📍 student-mapper.xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <!-- PreparedStatement, ResultSet -->
+    <mapper namespace="com.sist.dao.student-mapper">
+      <!-- 목록 출력 -->
+      <select id="studentListData" resultType="StudentVO">
+        SELECT * FROM student
+      </select>
+      <!-- 상세보기 -->
+      <select id="studentDetailData" resultType="StudentVO" parameterType="int">
+        SELECT * FROM student
+        WHERE hakbun=#{hakbun}
+      </select>
+      <!-- 검색 -->
+      <select id="studentFindData" resultType="StudentVO" parameterType="String">
+        SELECT * FROM student
+        WHERE name LIKE '%'||#{name}||'%'
+      </select>
+      <!-- 추가 -->
+      <insert id="studentInsert" parameterType="StudentVO">
+        <!-- Sequence를 지정하지 않았으면 아래처럼 코딩하기!! / selectKey → sequence를 대신한다 -->
+        <selectKey keyProperty="hakbun" order="BEFORE">
+          SELECT NVL(MAX(hakbun)+1,1) as hakbun FROM student
+        </selectKey>
+        INSERT INTO student VALUES(#{hakbun},#{name},#{kor},#{eng},#{math})
+      </insert>
+      <!-- 수정 -->
+      <update id="studentUpdate" parameterType="StudentVO">
+        UPDATE student SET name=#{name},kor=#{kor},eng=#{eng},math=#{math}
+        WHERE hakbun=#{hakbun}
+      </update>
+      <!-- 삭제 -->
+      <delete id="studentDelete" parameterType="int">
+        DELETE FROM student
+        WHERE hakbun=#{hakbun}
+      </delete>
+    </mapper>
+    
+    📍 StudentDAO.class
+    package com.sist.dao;
+    import java.util.*;
+    
+    import org.mybatis.spring.support.SqlSessionDaoSupport;
+    public class StudentDAO extends SqlSessionDaoSupport{
+    	// list
+    	public List<StudentVO> studentListData(){
+    		return getSqlSession().selectList("studentListData");
+    	}
+    	// detail
+    	public StudentVO studentDetailData(int hakbun) {
+    		return getSqlSession().selectOne("studentDetailData",hakbun);
+    	}
+    	// find
+    	public List<StudentVO> studentFindData(String name) {
+    		return getSqlSession().selectList("studentFindData",name);
+    	}
+    	// insert
+    	public void studentInsert(StudentVO vo) {
+    		getSqlSession().insert("studentInsert",vo);
+    	}
+    	// update
+    	public void studentUpdate(StudentVO vo) {
+    		getSqlSession().update("studentUpdate",vo);
+    	}
+    	// delete
+    	public void studentDelete(int hakbun) {
+    		getSqlSession().delete("studentDelete",hakbun);
+    	}
+    }
+
+    
