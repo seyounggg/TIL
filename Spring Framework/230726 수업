@@ -1,0 +1,87 @@
+Spring Framework
+  = 라이브러리 : 완제품
+  = 프레임워크 : 레고
+  = Spring (전자정부 프레임워크(공기업), 애니프레임워크(대기업))
+  = 개발에서 기본이 되는 틀(뺘대)을 제공해준다(기능을 추가해서 사용)
+  = 스프링의 목표(로드 존스) => Open Source
+    1) 클래스와 클래스간의 느슨한 결합, 낮은 결합도 유지
+                      ----------------------- 
+                      변경, 추가 할 때 다른 클래스에 영향이 없이 개발
+                      POJO (독립적인 클래스 제작)
+    2) 메소드마다 반복해서 사용하는 소스코드 → 공통 모듈로 분리(응집력이 높은 프로그램 제작)
+      => AOP : OOP 보완
+  = 클래스를 모아서 관리(생성 ~ 소멸) → 컨테이너
+      생성에 필요한 데이터나 객체 주소가 필요할 때도 있다 : DI
+    📍 DI : 객체 생성, 클래스의 연관관계
+    📍 AOP : 공통 모듈(AOP 기반 → 로그파일, 트랜젝션, 보안)
+    # DI/AOP => 인터페이스 기반
+  
+  1) 컨테이너의 역할
+      - DL : 클래스를 찾아주는 역할
+            getBean()
+      - DI : 필요한 데이터를 받아서 초기화 (변수)
+            Setter DI
+            Constructor DI(생성자의 매개변수를 이용)
+      # 객체 생성 → 객체 검색 → 객체 소멸
+
+  2) 컨테이너의 종류
+      BeanFactory : 가장 단순한 컨테이너(사용자가 만든 클래스만 관리) → CORE
+          |
+      ApplicationContext : AOP, 메세지 지원(JMS)
+          |                → 구현된 클래스
+          |                ClassPathApplicationContext
+          |                FileSystemXmlApplicationContext
+      WebApplicationContext : MVC(웹)
+      
+  3) DI(값을 스프링에 전송하는 방식)
+      주입(변수값을 주입, 객체 주소 설정)
+      변수가 모두 private으로 되어있으므로 변수에 접근이 어렵다
+      그래서, setter(p:변수명), 생성자(c:매개변수명) 를 사용해서 변수의 초기화를 진행한다.
+
+  📍 Spring에서 지원하는 라이브러리
+    Spring Core :DI(객체생성 ~ 소멸) => Container
+    Spring AOP : 공통모듈 => 자동호출
+      = Before
+      = After
+      = After-Returning
+      = After-Throwing
+      = Around
+      = JoinPoint, PintCut, 위빙
+      = Advice
+    Spring ORM : 데이터 베이스 연동(MyBatis, Hibernate, JPA)
+    Spring WEB : JSP 연동
+    Spring MVC : View - Model - Controller
+  
+  📍 Spring에서 객체를 생성하기 위해서는 클래스(메모리 할당이 가능)를 전송
+      - xml
+        = 클래스 한개를 설정
+          <bean id="a" calss="A"/>
+          <bean id="b" class="B"/>
+          Map
+          -------------------------
+            Key          클래스 객체
+          -------------------------
+            a             new A()
+          -------------------------
+            b             new B()
+          -------------------------
+          # 프로그램 동작 시작 => 클래스를 모아서 저장 : 주소값이 변경이 안된다(싱글턴)
+        = 패키지 단위 설정
+          <context:component-scan-package="com.sist.*"/>
+        = 단점
+          사용자 정의 / 라이브러리 클래스(MyBatis, ViewResolver...)
+          → Annotation이 없다 (가급적이면 xml등록)
+      - Annotation
+        @component : 일반 클래스(MainClass,크롤링,OpenApi)
+        @Repostory : DAO(저장소)
+        @Service : DAO여러개를 한번에 통합(BI)
+        @Controller : MVC구조의 Model (페이지 지정)
+        @RestController : MVC구조의 Model => JSON
+        @ControllerAdvice : 공통 예외처리
+        @RestControllerAdvice : 공통 예외처리
+        → 클래스에 설정을 하면 컨테이너가 메모리를 할당한다
+      - Java code
+      ✓ xml,Annotation,JavaCode => 메타정보 => 스프링 컨테이너
+
+      📍 Bean(객체) 생성주기
+          Bean 생성 → DI → init-method → 객체사용(개발자) → destroy-method → 소멸
