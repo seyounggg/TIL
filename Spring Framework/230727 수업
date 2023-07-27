@@ -61,3 +61,20 @@
   View (JSP)
     | request에 담긴 데이터를 출력(JSTL / EL)
   Client
+
+
+🤧 오후 수업
+1. Spring Legacy Project 생성
+2. java-version :1.8 로 변경
+
+** 기억하쟌!!
+- Controller 에서 @getMapping or @postMapping 구분하는 것 중요
+- request 사용하지 않고 매개변수로 처리!!
+
+Model (DispatcherServlet)
+class Model{
+	HttpServletRequest request;
+	public void addAtribute(String key,Object obj){
+		requeest.setAttribute(key,obj);
+	}
+}
