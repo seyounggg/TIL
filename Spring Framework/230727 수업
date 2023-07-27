@@ -1,0 +1,63 @@
+📌 myBatis에서 JOIN 사용하기 (xml/Annotation)
+- Join 은 자바에서 포함클래스라고 한다
+- Service를 사용하는 이유
+  service : 컨트롤러 처리 / dao 여러개 하나로 묶기 (기능 2개)
+  service(interface) → serviceImpl → repository(dao)
+  dao 수정은 repository에서!!
+  유지보수를 쉽게 하기 위해서 service기능을 사용한다
+
+📍 Java 에서의 Join
+  ✓ 예시
+  SELECT empno,ename,dname,loc
+  FROM emp,dept
+  WHERE emp.deptno=dept.deptno // DB의 Join
+  
+  while(rs.next()){
+    EmpVO vo=new EmpvO();
+    vo.setEmpvo(rs.getInt(1));
+    vo.setEname(rs.getString(2));
+    vo.getDvo().setDname(rs.getString(3)); //Java 의 Join
+    vo.getDvo().setLoc(rs.getString(4)); //Java 의 Join
+  }
+		
+📍 MyBatis : ORM(데이터베이스 연결) 를 잘 사용하려면
+  - SQL 쿼리 작성법 (CURD / JOIN / 동적쿼리 / 프로시저 호출 / 트렌젝션)을 알아야해
+  - #{} : #{name} => 'name'
+  - ${} : ${name} => name * column명, table명
+  
+  client ====== Spring Container ===== Service ===== Server
+  - Spring Container가 객체 주소를 가져와서 client에게 보여주는데, 서버에서 오류가 발생할 경우 Client에게 해당 오류를 출력할 수 없도록 
+    Spring Container 와 Server 사이에 Service interface 를 통해서 오류가 client에게 가는 것을 막는다!! (맞나?)
+
+📍 메모리 할당
+  @Repository 
+  @Component
+
+📍 의존 주입
+  @Autowired
+
+
+📌 Spring MVC 실행과정
+  Client -  요청 list.do → DispatcherServlet(@RequestMapping) → HandlerMapping - 요청처리 → Model(Controller)
+  - (request(데이터를 받을 JSP파일명)) → DispatcherServlet - JSP를 찾아라 → ViewResolver - request 전송 → View(JSP) → Client
+
+  Client
+    |
+  DispatcherServlet : 사용자의 모든 요청을 받는다(Front Controller)
+    |                 이미 Spring에서 라이브러리 제작)
+    |                 = 등록(web.xml) → servlet은 구동(톰캣)
+  HandlerAdapter : Model을 찾는 역할
+  HandlerMapping : 찾은 Model에서 @RequestMapping() 을 찾는 역할
+    |              + HandlerAdapter / HandlerMapping은 DispatcherServlet 설정과 동시에 설정
+    |              + Java로 환경 설정시에는 Handler~를 직접 설정해야한다
+    |              + web.xml에 셋팅과 동시에 구동
+  해당 모델 (Controller) : 개발자가 직접 제작
+    |  request에 요청 처리값을 담는다
+    |  JSP파일명을 전송한다
+    |  Java → JSP 전송 (X) ✓ JSP → JSP , Servlet → JSP 전송 (O)
+  DispatcherServlet
+    |  1) JSP 찾기
+    |  2) request를 전송 (ViewResolver가 수행)
+  View (JSP)
+    | request에 담긴 데이터를 출력(JSTL / EL)
+  Client
