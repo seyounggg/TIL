@@ -1,0 +1,38 @@
+Spring MVC
+
+🎈 스프링에서는 request를 사용하지 않는다!!
+    1) request.getParameter() :
+     매개변수 (DispatcherServlet에서 request.getParameter() 한 다음에 매개변수로 값을 전송해준다)
+    2) request 대신 Model을 이용해서 request에 담긴 데이터를 JSP로 전송
+    
+🎈 스프링에서 Model(Controller) 메소드를 만들때
+  ✓ 리턴형
+    - String
+    - void
+  ✓ 매개변수
+    - 단일변수 (int, String ...)
+    - VO 객체
+    - List<>
+    - []
+    - Model : 전송객체(forward)
+    - RedirectAttribute : 전송객체(sendRedirect)
+    - HttpSession
+    
+🎈 컨트롤러에 정의하는 어노테이션
+  @Conroller
+    = 요청처리 → 요청결과값을 전송 → 페이지(파일)지정
+      - jsp (forward) → request를 전송
+      - .do : request를 전송하지 않고, 기존의 파일로 이동(sendRedirect)
+              (기능 수행 후 이동하는 화면이 다를 경우)
+    ex)
+    detail.do => detail.jsp => forward
+    insert_ok.do => list.do / update_ok.do => detail.do
+  
+  @RestController
+    = 요청처리 → 요청한 결과값을 전송 → 결과값만 전송
+    ✓ 결과값?
+      1) JavaScript
+      2) 일반 문자열
+      3) JSON (Vue,React)
+
+  
