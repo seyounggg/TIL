@@ -1,0 +1,46 @@
+[쿠키 / 세션 / AOP 기초]
+
+dao : db 연결
+controller : 조립기(dao연동 → 데이터 추출 → 브라우저로 전송)
+restController : JavaScript로 JSON 전송할 목적 → 다른 언어와 연결(데이터를 전송)
+  ? 다른언어?
+    1) WEB → JavaScript(Ajax,VueJS,React)
+    2) Mobile → Kotlin
+vo : 관련된 데이터 모아서 관리(사용자 정의 데이터형)
+Service : BI → DAO 여러개 통합 , 다른 서비스 통합(크롤링)
+
+DataBoardController 메모
+< 매개변수 >
+요청 데이터가 없는 경우에는 String으로 설정해야한다(like page)
+모든 데이터는 String으로 받을 수 있다.
+매개변수는 순서가 없고, 여러개를 동시에 받을 수 있다
+
+📌 MVC 의 핵심은 "매개변수 , 리턴형 " !!!
+                        → forward or sendRedirect
+1. Model (controller) → 매개변수 설정
+  매개변수 : 사용자 보내준 값을 받는다
+      1) 일반 데이터 (int, String...)
+      2) 데이터를 모아서 처리 (VO _ 커맨드 객체)
+      3) checkbox → String[]
+  
+  내장객체 
+      1) HttpServletRequest
+      2) HttpServletResponse
+      request, response → 🎈 다운로드, Cookie 사용
+      3) HttpSession
+      4) Model
+      5) RedirectAttributes
+      6) PasswordEncoder
+  ★ 매개변수와 view에서 사용하는 변수가 일치해야 사용 가능하다!!
+  
+  리턴형
+      1) forward : 화면변경 → request (ex, return "main/main)
+      2) sendRedirect : 화면변경 → request를 초기화(기존의 설정된 위치로 화면 변경)
+2. RedirectAttributes
+  sendRedirect 일 때 값을 전송한다
+
+📌 .do => DispatcherServlet
+  .do 확장자로 연결되는 모든 페이지는 다 DispatcherServlet을 호출하는거임
+  DispatcherServlet이 갖고 있는 데이터를 뿌린거고, main_jsp가 덮어쓰고 있는거?? 이거 맞나??!?!?!?
+🌞 MyBatis에서 매개변수는 1개여야만 하고, 개발자가 작성하는 dao는 여러개여도 상관없음!!
+🌈 Rest ? post, get, delete ?? 
