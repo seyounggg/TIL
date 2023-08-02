@@ -1,0 +1,63 @@
+	aspect : AOP는 OOP를 대체하는 프로그램이 아니다
+ 			OOP를 보완한 프로그램이다
+ 			=> 콜백함수가 존재하지 않는다!
+ 	콜백함수란 ? 시스템에 의해서 자동으로 호출되는 함수(main,service ...)
+ 	
+ 	AOP는
+ 		한개, 두개 공통으로 사용되는 내용을 메소드로 처리
+ 		ex) getConnection(), disConnection()
+ 		여러개가 공통으로 사용되는 경우는 클래스!
+ 		ex) CreateDataBase
+ 	=> 공통 모듈
+ 	
+ 	* Spring에서는 반복적인 코딩을 모아서 관리 => 필요시에 자동으로 호출! => AOP!!
+ 	* 사용자 정의는 많이 사용되지 않는다:(라이브러리:트렌젝션,보안,로그파일)
+ 	
+ 	그렇다면 AOP는 어떻게 사용해야할까?
+ 	- 어떤 메소드에 적용할 것인지 설정하려면 => PointCut (메소드명 지정)
+ 		PointCut="execution(* com.sist.main.*.*(..))"
+ 							-				--- -- 모든 매개변수 가능(없어도 되고, 있어도 되고!)
+ 						리턴형(*:모든타입)	모든 클래스 및 메서드
+ 		pointCut="within("com.sist.main.*")" => 패키지 단위로 등록
+ 	- 호출되는 위치를 지정하려면 => JoinPoint
+ 		public String display(){
+ 			
+ 			@Before : 수행 전 (ex: getConnection)
+ 			try{
+ 				------ @Around (ex: setAutoCommit(false))
+ 				핵심코딩
+ 				------ @Around (ex: commit())
+ 			} catch(Exception e){
+ 				@After-Throwing : 오류 처리 (ex: rollback())
+ 			} finally {
+ 				@After : 에러 여부와 상관없이 무조건 수행 (ex: setAutoCommit(true), disConnection())
+ 			}
+ 			return "" @After-Returning : 정상수행 후 처리
+ 		}
+ 	
+ 	JoinPoint + Pointcut => Advice = 여러개 모아서 처리 => Aspect
+ 	Weaving : 통합 => proxy 패턴(대리자)
+ 	
+ 	public class A {
+ 		public void display(){
+ 		
+ 		}
+ 	}
+ 	
+ 	public class Proxy{
+ 		private A a;
+ 		public Proxy(A a){
+ 			this.a=a;
+ 		}
+ 		public void display(){
+ 			@Before (가 있다면 Before에 설정된 메소드 호출)
+ 			a.display();
+ 			@After (설정된 메소드 호출)
+ 		}
+ 	}
+
+
+📍
+DispatcherServlet : 요청 => 응답
+		HandlerMapping : Model 클래스 찾아주는 역할
+		ViewResolver : JSP 찾아주는 역할
