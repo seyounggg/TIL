@@ -1,0 +1,110 @@
+1. VueJS의 생명주기   => vue3(React) , vuex(MVC)
+    beforeCreate
+    created
+    ------------ vue 객체 생성
+    beforeMount 
+    mounted
+    ------------ 메모리에 저장
+    beforeUpdate
+    updated
+    ------------ 수정
+    beforeDestory
+    destoryed
+    ------------ 메모리 해제
+    
+    🌈⭐️📍 가상돔 : 게임(더블버퍼링) => 메모리를 두개 생성(가상메모리를 실제 메모리로!)
+    String => 메모리와 연결 vs StringBuffer
+    
+    DOM(Document Object Model)
+    => 메모리 공간이 트리형태로 저장되어 있는 것
+    => HTML, XML...
+    => 가상돔을 이용하는 것은 ReactJS, VueJS
+                    HTML
+            head            body
+        link  script     div    div
+    
+    <html>
+      <head>
+      </head>
+      <body>
+      <div>/*추가<span></span>*/<div>
+      </body>
+    </html>
+    
+    <가상메모리> - 중간에 span태그를 추가하면 가상돔에 추가되고, 실제 메모리에서 가상메모리랑 변경된 부분을 읽어서 브라우저로 출력
+                    html
+        head                    body
+                        span     div
+    
+    <실제메모리> -> 브라우저에서 읽어서 출력
+            html
+        head      body
+                  div
+
+2. 디렉티브
+    - 제어문
+      v-for : 반복문 => 태그
+            ex) <div v-for="">
+      v-if / v-else
+      v-show
+    - 이벤트
+      v-on:click => <button v-on:click="aaa()">
+      v-on:change ...
+    - 양방향 통신 / 단방향 통신(Vue/React) v-model
+      -------- AngularJS 에서 파생 => Go(제임스 고슬링) / C# / Java
+      
+3. 컴포넌트 : 재사용
+    Vue.Component('modal',template:'<html>...'
+    
+4. 데이터를 읽어서 출력(클라이언트 <=> 서버 통신) => axios
+    axios.get('url',{
+      params : { 데이터 전송 }
+    }).then(){결과값 읽기}
+    => 일반 문자열, JSON => @RestController
+    => 태그의 id | class 이용하는것이 아니고, ref="" 속성을 이용
+    
+5. 라우터 (화면변경) => Spring에서 화면 변경 / React에서 사용할 거임
+    - 검색, 로그인 처리, 댓글...
+
+6. Vue 생성
+  <script>
+    new Vue({
+      el : (제어영역 : class => ".container" , id => "#row")
+      data : {
+          📌 멤버변수(Vue에서 제어하는 변수)
+          a : [] → 스프링에서 전송 => ArrayList(JSONArray)
+          b : {} → VO (JSONObject)
+          c : true → boolean
+          d : '' → String
+          e : 0 → 정수 / 실수
+      }
+      📌 생명주기 함수 이용
+      mounted : function(){}
+      updated : function(){}
+      
+      📌 사용자 정의 함수 => 이벤트 중심!!
+      methods:{
+          aaa : function(){}
+      }
+      filters : 변환(날짜, 숫자) 🎈요즈음은 filters 대신에 complete
+    })
+  </script>  
+
+  🧷 데이터 출력
+    {{data에 설정된 변수만 사용 가능}}
+    = 한번에 데이터를 출력 => {{$data}}
+    = <img src="{{}}"> - 이렇게 작성하면 오류 발생
+      <img :src="poster"> 이렇게 작성!!
+    = : => <input type="text" :value="id"> => v-bind:(생략이 가능)
+
+
+
+
+
+
+
+
+
+
+
+
