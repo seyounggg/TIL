@@ -1,0 +1,122 @@
+1. Controller (Servlet => URL주소에 맞게 톰캣에 의해 호출)
+  DispatcherServlet (Servlet) => Spring라이브러리
+          |
+        클래스 관리자(설정 파일을 전송)
+        <init-param>
+          <param-name>contextConfigLocation</param-name>
+          <param-value>/WEB-INF/config/application-*.xml</param-value>
+        </init-param>
+
+2. HttpServletRequest : 사용을 하지 않는다.(권장)
+          |
+        한글 변환 등록
+        => Cookie 사용
+        => HttpServletResponse : Cookie, 파일 업로드
+        => HttpServletRequest : 사용자 요청값, JSP로 결과값 전송
+            → 요청값은 매개변수로 설정
+            → 전송은 Model 이용
+
+사용자 요청 
+    *.do		=========>	DispatcherServlet ==========>	HandlerMapping ==========> Model(사용자 정의)
+                                                                                @Controller
+                                                                                @RestController
+                                                                                메소드를 찾아서 요청 수행
+                                                                                @RequestMapping : GET / POST
+                                                                                @GetMapping : GET
+                                                                                @PostMapping : POST
+  JSP <==============================  ViewResolver	<============================
+  결과값(requeset)을 받아서 출력 => JSP      => 경로명, 확장자 => return과 관련
+                                        => JSP를 찾아서 request를 전송
+                                              
+# 환경설정 / 클래스 등록 , 데이터베이스연결
+  application-*.xml
+# 사용자 정의 클래스 메모리 할당
+  1) XML 설정 =><bean..> : 공용
+  2) Annotation : <context:conpoenet-scan base-package="">
+    - 패키지 단위로 등록 (선별적으로 메모리 할당)
+    - 해당되지 않는 클래스 : interface , VO ...
+    - 기능별로 메모리 할당 요청
+      = 일반 클래스
+        @component
+          - JUnit (테스트용)
+          - ~Manager (OPEN API) : data.go.kr
+          - 분석을 통해서 추천시스템
+      = 데이터베이스 연결
+        @Repository
+          - 테이블 한개 연결
+        @Service
+          - 테이블 여러개 연결(관련된 테이블)
+          - BI
+      = Model(기능) => 조립기(데이터베이스+브라우저 전송)
+        @Controller
+          - 요청처리 / 화면이동
+          - Forward 기법 : request를 전송 (return "경로명/jsp";)
+            (request.setAttribute , model.addAttribute)
+          - Redirect 기법 : 지정된 화면으로 이동 (return "redirect:~~.do";) // 재사용
+          = 매개변수 사용
+            (request.getParameter(),Model,기타 내장객체)
+            - HttpServletRequest
+            - HttpServletResponse
+            - HttpSession
+            - RedirectAttributes
+            - ModelAttribute
+            - 데이터형 : ~VO(커멘드 객체), [], List...
+            - 일반 변수는 해당변수, 모든데이터를 String으로 받을 수 있다.
+        @RestController(6버전)
+            = JavaScript에 데이터 전송 , 모바일 / 화면이동(X)
+              - 일반 데이터 전송이 가능(JSON : 자바스크립트 객체 표현법)
+              - VO : {}
+              - List : []
+      = 공통으로 사용되는 예외처리
+        @ControllerAdvice
+        @RestControllerAdvice
+      = 인터셉트
+        - <bean>을 이용해서 생성
+      = 자바 환경 설정 파일 : XML 대신 사용 (보안성 굿)
+      = AOP는 메모리 할당이 아니다 => @Component를 사용한다
+ 
+  스프링 기반
+    = DI
+      - 스프링을 통해서 클래스 관리(객체 생명주기)
+      - 생성 시 필요한 데이터가 존재할 수 있다.
+      - 필요한 데이터를 전송하는게 DI 역할이라고 할 수 있다
+      - 역할
+        1) setter DI
+        2) Constructor DI
+        3) Method DI
+      - XML을 이용해서 전송 , Autowired
+      - 📍 클래스와 캘래스의 연관관계도를 작성하는 것이다
+    
+    = AOP
+      - 공통모듈 => 핵심만 소스 코딩
+      - JoinPoint
+        = 호출되는 시점을 설정
+          - Before
+          - After
+          - After-Throwing
+          - After-Returning
+          - Around
+          ====================== Transaction / Security / log(MyBatis)
+          public String display(){
+                ========== Before : getConnection()
+              try{
+                ========== Around : setAutoCommit()
+
+                ========== Around : commit()
+              } catch(){
+                ========== After-Throwing : rollback()
+              } finally {
+                ========== After : disConnection()
+              }
+              return ""; : After-Returning
+          }
+      - PointCut
+        = 적용되는 메소드를 지정
+      
+    = Application / WebApplication(MVC) : 동작을 할 수 있게 미리 틀을 제작
+      - 메뉴얼을 제작해서 전송(XML)
+
+  + 추가!
+  - 인터셉트 
+  - Task
+  - webSocket
